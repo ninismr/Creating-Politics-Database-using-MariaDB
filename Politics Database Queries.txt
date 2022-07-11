@@ -1,0 +1,316 @@
+CREATE database politics;
+USE politics;
+
+CREATE table province (
+code int NOT NULL, 
+province_name varchar(20), 
+PRIMARY KEY (code));
+DESC province;
+
+CREATE table district (
+province_code int NOT NULL, 
+code int(2) zerofill NOT NULL, 
+district_name varchar(20), 
+PRIMARY KEY (code), 
+FOREIGN KEY (province_code) 
+REFERENCES province(code));
+DESC district;
+
+CREATE table sub_district (
+district_code int(2) zerofill NOT NULL, 
+code int(2) zerofill NOT NULL, 
+sub_district_name varchar(20), 
+PRIMARY KEY (code), 
+FOREIGN KEY (district_code) 
+REFERENCES district(code));
+DESC sub_district;
+
+CREATE table village (
+sub_district_code int(2) zerofill NOT NULL, 
+code int NOT NULL, 
+village_name varchar(20), 
+PRIMARY KEY (code), 
+FOREIGN KEY (sub_district_code) 
+REFERENCES sub_district(code));
+DESC village;
+
+CREATE table party (
+code int(2) zerofill NOT NULL, 
+party_name varchar(15), 
+established_year int(4), 
+party_chairman char(30), 
+participation_in_legislative_general_election int, 
+PRIMARY KEY (code));
+DESC party;
+
+CREATE table legislative_candidate (
+ID_card_number char(16) NOT NULL, 
+candidate_name varchar(30), 
+gender varchar(10), 
+address varchar(50), 
+village_code int NOT NULL, 
+party_code int(2) zerofill NOT NULL, 
+party_name varchar(15), 
+serial_number int(2) zerofill NOT NULL, 
+PRIMARY KEY (serial_number), 
+FOREIGN KEY (village_code) 
+REFERENCES village(code), 
+FOREIGN KEY (party_code) 
+REFERENCES party(code));
+DESC legislative_candidate;
+
+CREATE table legislative_general_election_result (
+legislative_general_election_year int(4), 
+candidate_name char(30),
+party_name varchar(15), 
+candidate_serial_number int(2) zerofill NOT NULL, 
+seat_amount int, 
+voting_rank int, 
+votes_amount int, 
+FOREIGN KEY (candidate_serial_number) 
+REFERENCES legislative_candidate(serial_number));
+DESC legislative_general_election_result;
+
+INSERT INTO province values (32, "West Java");
+INSERT INTO province values (12, "North Sumatra");
+INSERT INTO province values (64, "East Kalimantan");
+INSERT INTO province values (73, "South Sulawesi");
+INSERT INTO province values (51, "Bali");
+INSERT INTO province values (91, "Papua");
+INSERT INTO province values (75, "Gorontalo");
+INSERT INTO province values (72, "Central Sulawesi");
+INSERT INTO province values (11, "Aceh");
+INSERT INTO province values (77, "Bengkulu");
+SELECT * FROM province;
+
+INSERT INTO district values (32, 16, "Bekasi");
+INSERT INTO district values (12, 04, "Nias");
+INSERT INTO district values (64, 01, "Paser");
+INSERT INTO district values (73, 17, "Luwu");
+INSERT INTO district values (51, 08, "Buleleng");
+INSERT INTO district values (91, 22, "Yalimo");
+INSERT INTO district values (75, 02, "Boalemo");
+SELECT * FROM district;
+
+INSERT INTO sub_district values (16, 07, "Cibitung");
+INSERT INTO sub_district values (04, 06, "Gido");
+INSERT INTO sub_district values (01, 05, "Kuaro");
+INSERT INTO sub_district values (17, 02, "Larompong");
+INSERT INTO sub_district values (08, 04, "Banjar");
+INSERT INTO sub_district values (22, 03, "Abenaho");
+INSERT INTO sub_district values (02, 01, "Paguyaman");
+SELECT * FROM sub_district;
+
+INSERT INTO village values (07, 712, "Kertamukti");
+INSERT INTO village values (06, 620, "Somi");
+INSERT INTO village values (05, 513, "Rangan");
+INSERT INTO village values (02, 219, "Riwang");
+INSERT INTO village values (04, 441, "Tirtasari");
+INSERT INTO village values (03, 326, "Halisek");
+INSERT INTO village values (01, 108, "Bualo");
+SELECT * FROM village;
+
+INSERT INTO party values (01, "PKS", 1998, "Ahmad Syaikhu", 5);
+INSERT INTO party values (02, "PPP", 1973, "Suharso Monoarfa", 11);
+INSERT INTO party values (03, "DEMOKRAT", 2001, "Susilo Bambang Yudhoyono", 4);
+INSERT INTO party values (04, "GOLKAR", 1964, "Airlangga Hartarto", 12);
+INSERT INTO party values (05, "PDIP", 1973, "Megawati Soekarnoputri", 5);
+INSERT INTO party values (06, "NASDEM", 2011, "Surya Paloh", 2);
+INSERT INTO party values (07, "GERINDRA", 2008, "Prabowo Subianto", 3);
+INSERT INTO party values (08, "GERINDRA", 2008, "Prabowo Subianto", 3);
+INSERT INTO party values (09, "PERINDO", 2014, "Hary Tanoesoedibjo", 1);
+INSERT INTO party values (10, "PKB", 1998, "Muhaimin Iskandar", 5);
+INSERT INTO party values (11, "PAN", 1998, "Zulkifli Hasan", 5);
+SELECT * FROM party;
+
+INSERT INTO legislative_candidate values (3216070911780003, "Bambang Purwanto", "Male", "Kertamukti Street Block A-01, Cibitung", 712, 01, "PKS", 24);
+INSERT INTO legislative_candidate values (1204064812670002, "Dewi Zebua", "Female", "2B Somi Street, Gido", 620, 05, "PDIP", 04);
+INSERT INTO legislative_candidate values (6401055210570001, "Arlina", "Female", "Rangan Village block I-47, Kuaro", 513, 03, "DEMOKRAT", 31);
+INSERT INTO legislative_candidate values (7317026403800004, "Herawati", "Female", "Riwang Housing number 6, Larompong", 219, 04, "GOLKAR", 02);
+INSERT INTO legislative_candidate values (5108041708820005, "Nyoman Tirtawan", "Male", "18E Tirtasari Village, Banjar", 441, 06, "NASDEM", 05);
+INSERT INTO legislative_candidate values (9122030305750003, "Elia Yare", "Male", "Halisek Street number 5, Abenaho", 326, 07, "GERINDRA", 06);
+INSERT INTO legislative_candidate values (7502017007900006, "Sarippa Atute", "Female", "Bualo Housing Block D-09, Paguyaman", 108, 02, "PPP", 01);
+SELECT * FROM legislative_candidate;
+
+INSERT INTO legislative_general_election_result values (2019, "Nyoman Tirtawan", "NASDEM", 05, 59, 5, 12661792);
+INSERT INTO legislative_general_election_result values (2009, "Arlina", "DEMOKRAT", 31, 150, 1, 21703137);
+INSERT INTO legislative_general_election_result values (1997, "Herawati", "GOLKAR", 02, 325, 1, 84187907);
+INSERT INTO legislative_general_election_result values (1992, "Sarippa Atute", "PPP", 01, 62, 2, 16624647);
+INSERT INTO legislative_general_election_result values (2014, "Elia Yare", "GERINDRA", 06, 73, 3, 14760371);
+INSERT INTO legislative_general_election_result values (1999, "Bambang Purwanto", "PKS", 24, 7, 7, 1436565);
+INSERT INTO legislative_general_election_result values (2014, "Dewi Zebua", "PDIP", 04, 109, 2, 21026629);
+SELECT * FROM legislative_general_election_result;
+
+SELECT * FROM party;
+UPDATE party 
+SET party_chairman = "Agus Harimurti Yudhoyono" 
+WHERE party_name = "DEMOKRAT";
+SELECT * FROM party;
+
+SELECT * FROM party;
+DELETE FROM party 
+WHERE code = 08;
+SELECT * FROM party;
+
+SELECT c.candidate_name, c.party_name, 
+c.serial_number, c.address, v.village_name, 
+s.sub_district_name, d.district_name, pr.province_name 
+FROM legislative_candidate c
+JOIN village v ON v.code = c.village_code
+JOIN sub_district s ON s.code = v.sub_district_code
+JOIN district d ON d.code = s.district_code
+JOIN province pr ON pr.code = d.province_code;
+
+SELECT p.party_name, c.candidate_name, c.serial_number 
+FROM party p 
+LEFT JOIN legislative_candidate c ON p.code = c.party_code;
+
+SELECT c.candidate_name, c.party_name, c.address, 
+v.village_name, s.sub_district_name, 
+d.district_name, pr.province_name 
+FROM legislative_candidate c
+JOIN village v ON v.code = c.village_code
+JOIN sub_district s ON s.code = v.sub_district_code
+JOIN district d ON d.code = s.district_code
+RIGHT JOIN province pr ON pr.code = d.province_code
+ORDER BY province_name ASC;
+
+SELECT MAX(votes_amount) AS max_votes_amount,
+MIN(votes_amount) AS min_votes_amount,
+SUM(votes_amount) AS sum_of_votes_amount,
+AVG(votes_amount) AS avg_of_votes_amount
+FROM legislative_general_election_result;
+
+SELECT established_year AS party_established_year,
+COUNT(established_year) AS party_amount
+FROM party
+GROUP BY established_year;
+
+SELECT voting_rank AS party_voting_rank,
+COUNT(voting_rank) AS party_amount
+FROM legislative_general_election_result
+WHERE voting_rank < 6
+GROUP BY voting_rank;
+
+SELECT * FROM legislative_general_election_result
+WHERE seat_amount >
+	(SELECT AVG(seat_amount) 
+	FROM legislative_general_election_result);
+
+SELECT * FROM party 
+WHERE established_year < ANY (
+	SELECT MIN(legislative_general_election_year) 
+	FROM legislative_general_election_result 
+	WHERE party_name IN (
+		SELECT party_name
+		FROM legislative_candidate 
+		WHERE serial_number BETWEEN 1 AND 5));
+
+SELECT party_name 
+FROM party
+WHERE participation_in_legislative_general_election > 4
+UNION
+SELECT party_name 
+FROM legislative_general_election_result
+WHERE voting_rank < 6;
+
+SELECT party_name 
+FROM party
+WHERE established_year < 2000
+INTERSECT
+SELECT party_name 
+FROM legislative_general_election_result
+WHERE seat_amount > 50;
+
+DESC party;
+ALTER TABLE party
+MODIFY party_chairman varchar(50)
+AFTER party_name;
+DESC party;
+
+DESC legislative_general_election_result;
+ALTER TABLE legislative_general_election_result
+CHANGE candidate_name one_of_the_candidate_names varchar(50);
+DESC legislative_general_election_result;
+
+UPDATE party 
+SET party_chairman = "Agus Harimurti Yudhoyono" 
+WHERE party_name = "DEMOKRAT";
+
+DELETE FROM party 
+WHERE code = 08;
+
+SELECT c.candidate_name, c.party_name, c.serial_number, c.address, v.village_name, s.sub_district_name, d.district_name, pr.province_name 
+FROM legislative_candidate c
+JOIN village v ON v.code = c.village_code
+JOIN sub_district s ON s.code = v.sub_district_code
+JOIN district d ON d.code = s.district_code
+JOIN province pr ON pr.code = d.province_code;
+
+SELECT p.party_name, c.candidate_name, c.serial_number 
+FROM party p 
+LEFT JOIN legislative_candidate c ON p.code = c.party_code;
+
+SELECT c.candidate_name, c.party_name, c.address, v.village_name, s.sub_district_name, d.district_name, pr.province_name 
+FROM legislative_candidate c
+JOIN village v ON v.code = c.village_code
+JOIN sub_district s ON s.code = v.sub_district_code
+JOIN district d ON d.code = s.district_code
+RIGHT JOIN province pr ON pr.code = d.province_code
+ORDER BY province_name ASC;
+
+SELECT MAX(votes_amount) AS max_votes_amount,
+MIN(votes_amount) AS min_votes_amount,
+SUM(votes_amount) AS sum_of_votes_amount,
+AVG(votes_amount) AS avg_of_votes_amount
+FROM legislative_general_election_result;
+
+SELECT established_year AS party_established_year,
+COUNT(established_year) AS party_amount
+FROM party
+GROUP BY established_year;
+
+SELECT voting_rank AS party_voting_rank,
+COUNT(voting_rank) AS party_amount
+FROM legislative_general_election_result
+WHERE voting_rank < 6
+GROUP BY(voting_rank);
+
+SELECT * 
+FROM legislative_general_election_result
+WHERE seat_amount >
+	(SELECT AVG(seat_amount) 
+	FROM legislative_general_election_result);
+
+SELECT *
+FROM party 
+WHERE established_year < ANY (
+	SELECT MIN(legislative_general_election_year) 
+	FROM legislative_general_election_result 
+	WHERE party_name IN (
+		SELECT party_name
+		FROM legislative_candidate 
+		WHERE serial_number BETWEEN 1 AND 5 ));
+
+SELECT party_name 
+FROM party
+WHERE participation_in_legislative_general_election > 4
+UNION
+SELECT party_name 
+FROM legislative_general_election_result
+WHERE voting_rank < 6;
+
+SELECT party_name 
+FROM party
+WHERE established_year < 2000
+INTERSECT
+SELECT party_name 
+FROM legislative_general_election_result
+WHERE seat_amount > 50;
+
+ALTER TABLE party
+MODIFY party_chairman varchar(50)
+AFTER party_name;
+
+ALTER TABLE legislative_general_election_result
+CHANGE candidate_name one_of_the_candidate_names varchar(50);
